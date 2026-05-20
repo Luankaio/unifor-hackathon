@@ -1,0 +1,7 @@
+agente:
+
+pessoa pede alteração em tal coisa ou em tal plano, 
+ele manda para o chat bot com o nome da pessoa e com a solicitação
+e o chatbot ja cria automaticamente o ticket com as informações passadas
+
+se faltar informação o chatbot pede

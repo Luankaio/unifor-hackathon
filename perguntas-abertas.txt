@@ -1,0 +1,138 @@
+PERGUNTAS EM ABERTO — DESAFIO 05
+Visibilidade e Governança no Planejamento Logístico | M. Dias Branco
+=======================================================================
+Essas perguntas representam lacunas que impactam diretamente as decisões
+de arquitetura e design da solução. Organizadas por prioridade.
+=======================================================================
+
+
+--- BLOCO 1: CRÍTICO ANTES DE QUALQUER DECISÃO DE ARQUITETURA ---
+
+1. A empresa tem licença de Power Platform (Power Apps + Power Automate)?
+   Por que importa: se sim, conseguimos construir um sistema completo dentro
+   do ecossistema Microsoft que eles já usam — sem novo software, sem custo
+   adicional, com integração nativa ao Teams e SharePoint. Se não, precisamos
+   de outra abordagem.
+
+2. Existe alguma restrição de TI para usar ferramentas em nuvem ou hospedar
+   uma aplicação nova? Ou tudo precisa ser dentro do ambiente Microsoft já
+   existente?
+   Por que importa: define se podemos propor um sistema web próprio ou se
+   a solução precisa ser 100% dentro do M365.
+
+3. O SharePoint que recebe os arquivos para o O9 é acessível programaticamente
+   (via API do SharePoint / Graph API)? Ou é uma pasta de rede mapeada?
+   Por que importa: determina se conseguimos automatizar o upload de arquivos
+   ou se o parametrizador sempre precisa fazer manualmente.
+
+4. Quem criou e quem hoje mantém os scripts Python? É uma equipe de TI ou
+   os próprios parametrizadores?
+   Por que importa: se for TI, há um canal formal para estender os scripts
+   com validações. Se for os próprios parametrizadores, o nível técnico para
+   manter a solução é diferente.
+
+
+--- BLOCO 2: ENTENDER O FLUXO REAL DE UMA SOLICITAÇÃO DE MALHA ---
+(malha foi confirmado como o tipo mais frequente — entender esse fluxo
+em detalhes é essencial para modelar o formulário e o workflow)
+
+5. Quando alguém solicita uma alteração de malha, quais informações
+   precisam vir junto? (ex: origem, destino, SKU, modal de transporte,
+   lead time, data de vigência, motivo)
+   Por que importa: esses campos viram os campos obrigatórios do formulário
+   de solicitação. Se não soubermos, o formulário vai ser incompleto.
+
+6. Uma solicitação de malha costuma ser uma única rota ou um conjunto de
+   rotas de uma vez?
+   Por que importa: impacta o design do formulário (item a item vs upload
+   de planilha com vários registros).
+
+7. Quando uma malha é alterada, isso impacta automaticamente outros dados
+   (política, capacidade de CD)? Existe dependência entre os tipos de dado?
+   Por que importa: se houver dependência, o sistema precisa alertar sobre
+   efeitos colaterais de uma alteração.
+
+8. Existe alguma regra de negócio conhecida que poderia ser automatizada
+   para validar se um dado de malha faz sentido antes de entrar no O9?
+   (ex: "esse SKU não pode ser produzido nessa fábrica", "esse CD não
+   atende essa regional")
+   Por que importa: é a base para construir validação semântica — o maior
+   gap técnico do processo atual.
+
+
+--- BLOCO 3: ENTENDER O QUE OS USUÁRIOS REALMENTE PRECISAM VER ---
+
+9. O que um planejador do S&OE precisa ver para confiar que o O9 está
+   com os dados corretos? Um dashboard com últimas alterações? Uma
+   notificação no Teams? Um e-mail resumo diário?
+   Por que importa: é o requisito de visibilidade — não adianta logar
+   tudo se ninguém vai olhar.
+
+10. Quando um gerente regional precisa aprovar uma alteração crítica,
+    ele prefere receber uma notificação no Teams, por e-mail, ou acessar
+    um portal?
+    Por que importa: se a aprovação for complicada de fazer, o gerente
+    vai ignorar e continuar aprovando por mensagem de voz.
+
+11. Os parametrizadores gostariam de ver uma fila de solicitações priorizada,
+    ou só querem ser notificados de novas solicitações e gerenciam pelo próprio
+    critério?
+    Por que importa: define se precisamos de um sistema de fila e atribuição
+    ou apenas de um canal estruturado de entrada.
+
+
+--- BLOCO 4: ENTENDER OS LIMITES DO QUE É ACEITÁVEL ---
+
+12. A solução precisa funcionar integrada ao O9, ou pode ser um sistema
+    paralelo que organiza o processo e ao final gera o arquivo para o
+    parametrizador subir no SharePoint?
+    Por que importa: integração direta com O9 pode ser complexa/impossível.
+    Um sistema que apenas organiza o fluxo e entrega o arquivo pronto já
+    resolve a governança sem precisar tocar no O9.
+
+13. Existe algum sistema de chamados ou tickets usado em outra área da
+    M. Dias Branco que poderia ser reaproveitado ou servir de referência?
+    Por que importa: se já existe cultura de usar tickets em outra área,
+    a adoção é mais fácil. Se não existe, precisamos de algo muito simples.
+
+14. Qual é o prazo esperado (SLA) para uma solicitação ser atendida?
+    Existe alguma expectativa de tempo de resposta hoje, mesmo que informal?
+    Por que importa: sem SLA definido, não tem como medir se a solução
+    está funcionando melhor que o processo atual.
+
+
+--- BLOCO 5: ENTENDER O CONTEXTO DO HACKATHON ---
+
+15. O que os juízes vão avaliar? (inovação, viabilidade técnica, impacto
+    no negócio, completude da solução)
+    Por que importa: muda o que priorizamos no que apresentamos — se for
+    impacto, focamos no pitch. Se for técnico, focamos no demo.
+
+16. Teremos acesso a alguém da M. Dias Branco durante o desenvolvimento
+    para tirar dúvidas pontuais?
+    Por que importa: algumas dessas perguntas precisam de 5 minutos com
+    William para responder — se tivermos esse canal, não precisamos adivinhar.
+
+17. A expectativa é um protótipo navegável (telas), um MVP funcional ou
+    uma apresentação de conceito com slides?
+    Por que importa: define quanto tempo dedicamos a construir vs a apresentar.
+
+
+--- BLOCO 6: BÔNUS — SE CONSEGUIRMOS RESPONDER, MELHOR ---
+
+18. Quantos CDs, fábricas e regionais existem hoje no escopo do O9?
+    Por que importa: dimensiona o tamanho real do problema e impressiona
+    no pitch se citarmos números reais.
+
+19. Já houve alguma tentativa anterior de organizar esse processo? O que
+    foi tentado e por que não funcionou?
+    Por que importa: evita propor algo que já foi rejeitado antes.
+
+20. Com a entrada dos novos módulos (sequenciamento e demand sense) pelo
+    meio do ano, quais inputs manuais deixam de existir e quais permanecem?
+    Por que importa: não queremos construir uma solução para um problema
+    que vai desaparecer em 6 meses. Precisamos focar nos inputs que ficam.
+
+=======================================================================
+FIM DA LISTA
+=======================================================================
